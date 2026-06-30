@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>📝 To-Do List Application</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <h1><i class="fas fa-tasks"></i> My Tasks</h1>
+        <div class="header-actions">
+          <button class="btn-icon" id="searchBtn" title="Search">
+            <i class="fas fa-search"></i>
+          </button>
+          <button class="btn-icon" id="settingsBtn" title="Settings">
+            <i class="fas fa-cog"></i>
+          </button>
+          <button class="btn-icon" id="darkModeBtn" title="Dark Mode">
+            <i class="fas fa-moon"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Search Bar -->
+    <div class="search-container hidden">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search tasks...">
+        <button class="btn-close" id="closeSearchBtn">×</button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Input Section -->
+      <section class="input-section">
+        <div class="input-group">
+          <input type="text" id="taskInput" placeholder="Add a new task..." class="task-input">
+          <button id="addBtn" class="btn btn-primary">Add Task</button>
+        </div>
+        
+        <div class="task-options">
+          <select id="categorySelect" class="select-input">
+            <option value="">Select Category</option>
+            <option value="Work">Work</option>
+            <option value="Personal">Personal</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Health">Health</option>
+            <option value="Other">Other</option>
+          </select>
+          
+          <select id="prioritySelect" class="select-input">
+            <option value="">Priority</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+          
+          <input type="date" id="dueDateInput" class="select-input">
+        </div>
+      </section>
+
+      <!-- Statistics -->
+      <section class="stats-section">
+        <div class="stat-card">
+          <div class="stat-value" id="totalTasks">0</div>
+          <div class="stat-label">Total Tasks</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="completedTasks">0</div>
+          <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="pendingTasks">0</div>
+          <div class="stat-label">Pending</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="completionPercent">0%</div>
+          <div class="stat-label">Progress</div>
+        </div>
+      </section>
+
+      <!-- Filter Section -->
+      <section class="filter-section">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="active">Active</button>
+        <button class="filter-btn" data-filter="completed">Completed</button>
+        <button class="filter-btn" data-filter="today">Today</button>
+        <button class="filter-btn" data-filter="overdue">Overdue</button>
+      </section>
+
+      <!-- Tasks List -->
+      <section class="tasks-section">
+        <div id="tasksList" class="tasks-list">
+          <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <p>No tasks yet. Add one to get started! 🚀</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Settings</h2>
+          <button class="btn-close" id="closeSettingsBtn">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="setting-item">
+            <label>Sort By:</label>
+            <select id="sortSelect" class="select-input">
+              <option value="date">Date Created</option>
+              <option value="dueDate">Due Date</option>
+              <option value="priority">Priority</option>
+              <option value="category">Category</option>
+            </select>
+          </div>
+
+          <div class="setting-item">
+            <label>Export Tasks:</label>
+            <button id="exportBtn" class="btn btn-secondary">
+              <i class="fas fa-download"></i> Export as JSON
+            </button>
+          </div>
+
+          <div class="setting-item">
+            <label>Import Tasks:</label>
+            <input type="file" id="importInput" accept=".json" style="display: none;">
+            <button id="importBtn" class="btn btn-secondary">
+              <i class="fas fa-upload"></i> Import from JSON
+            </button>
+          </div>
+
+          <div class="setting-item">
+            <label>Danger Zone:</label>
+            <button id="clearAllBtn" class="btn btn-danger">
+              <i class="fas fa-trash"></i> Clear All Tasks
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Task Modal -->
+    <div id="editModal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Edit Task</h2>
+          <button class="btn-close" id="closeEditBtn">×</button>
+        </div>
+        <div class="modal-body">
+          <input type="text" id="editTaskTitle" placeholder="Task title" class="task-input">
+          <textarea id="editTaskDescription" placeholder="Description (optional)" class="task-input"></textarea>
+          
+          <select id="editCategorySelect" class="select-input">
+            <option value="Work">Work</option>
+            <option value="Personal">Personal</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Health">Health</option>
+            <option value="Other">Other</option>
+          </select>
+          
+          <select id="editPrioritySelect" class="select-input">
+            <option value="low">Low Priority</option>
+            <option value="medium">Medium Priority</option>
+            <option value="high">High Priority</option>
+          </select>
+          
+          <input type="date" id="editDueDateInput" class="select-input">
+          
+          <div class="modal-actions">
+            <button id="saveEditBtn" class="btn btn-primary">Save Changes</button>
+            <button id="cancelEditBtn" class="btn btn-secondary">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification" class="notification hidden"></div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

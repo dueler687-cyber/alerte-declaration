@@ -1,0 +1,13 @@
+{
+  "name": "todo-list-app",
+  "version": "1.0.0",
+  "description": "A modern to-do list application with local storage functionality",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "dev": "live-server"
+  },
+  "keywords": ["todo", "tasks", "local-storage", "productivity"],
+  "author": "",
+  "license": "MIT"
+}
