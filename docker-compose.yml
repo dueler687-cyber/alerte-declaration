@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: alerte_declaration
+      MYSQL_USER: alerte_user
+      MYSQL_PASSWORD: alerte_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: mysql
+      DB_USER: alerte_user
+      DB_PASSWORD: alerte_pass
+      DB_NAME: alerte_declaration
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_data:

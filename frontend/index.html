@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alerte Déclaration Fiscale</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <div id="app">
+    <div id="loginPage" class="page">
+      <div class="login-container">
+        <div class="login-box">
+          <h1><i class="fas fa-bell"></i> Alerte Déclaration</h1>
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" placeholder="votre@email.com" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Mot de passe</label>
+              <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Connexion</button>
+            <p class="text-center">Pas encore de compte? <a href="#" onclick="showRegisterPage()">Inscrivez-vous</a></p>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="registerPage" class="page hidden">
+      <div class="login-container">
+        <div class="login-box">
+          <h1><i class="fas fa-user-plus"></i> Inscription</h1>
+          <form id="registerForm">
+            <div class="form-group">
+              <label for="regNom">Nom complet</label>
+              <input type="text" id="regNom" placeholder="Votre nom" required>
+            </div>
+            <div class="form-group">
+              <label for="regEmail">Email</label>
+              <input type="email" id="regEmail" placeholder="votre@email.com" required>
+            </div>
+            <div class="form-group">
+              <label for="regPassword">Mot de passe</label>
+              <input type="password" id="regPassword" placeholder="Min. 6 caractères" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Créer un compte</button>
+            <p class="text-center">Vous avez un compte? <a href="#" onclick="showLoginPage()">Connectez-vous</a></p>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="dashboardPage" class="page hidden">
+      <nav class="navbar">
+        <div class="navbar-brand">
+          <h2><i class="fas fa-bell"></i> Alerte Déclaration Fiscale</h2>
+        </div>
+        <div class="navbar-menu">
+          <button class="btn btn-secondary" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+        </div>
+      </nav>
+
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-content">
+              <h3 id="totalCollaborators">0</h3>
+              <p>Collaborateurs</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-envelope"></i></div>
+            <div class="stat-content">
+              <h3 id="emailsSent">0</h3>
+              <p>Emails envoyés</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon"><i class="fab fa-whatsapp"></i></div>
+            <div class="stat-content">
+              <h3 id="whatsappsSent">0</h3>
+              <p>Messages WhatsApp</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <button class="tab-btn active" onclick="showTab('collaborators')">Collaborateurs</button>
+          <button class="tab-btn" onclick="showTab('alerts')">Alertes</button>
+          <button class="tab-btn" onclick="showTab('history')">Historique</button>
+        </div>
+
+        <div id="collaborators" class="tab-content active">
+          <div class="section-header">
+            <h3>Gestion des Collaborateurs</h3>
+            <button class="btn btn-primary" onclick="showAddCollaboratorModal()"><i class="fas fa-plus"></i> Ajouter</button>
+          </div>
+          <div id="collaboratorsList" class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Email</th>
+                  <th>WhatsApp</th>
+                  <th>Statut</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="collaboratorsTable">
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="alerts" class="tab-content hidden">
+          <div class="section-header">
+            <h3>Envoyer des Alertes</h3>
+          </div>
+          <div class="alert-form">
+            <div class="form-group">
+              <label>Date de rappel du mois</label>
+              <select id="reminderDate">
+                <option value="5">5 du mois</option>
+                <option value="8">8 du mois</option>
+                <option value="12">12 du mois</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" onclick="sendReminders()"><i class="fas fa-paper-plane"></i> Envoyer les rappels</button>
+          </div>
+        </div>
+
+        <div id="history" class="tab-content hidden">
+          <div class="section-header">
+            <h3>Historique des Alertes</h3>
+          </div>
+          <div id="historyList" class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Collaborateur</th>
+                  <th>Email envoyé</th>
+                  <th>WhatsApp envoyé</th>
+                  <th>Date</th>
+                  <th>Statut</th>
+                </tr>
+              </thead>
+              <tbody id="historyTable">
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="addCollaboratorModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Ajouter un collaborateur</h3>
+        <button class="close-btn" onclick="closeModal('addCollaboratorModal')">&times;</button>
+      </div>
+      <form id="addCollaboratorForm">
+        <div class="form-group">
+          <label for="collabNom">Nom</label>
+          <input type="text" id="collabNom" required>
+        </div>
+        <div class="form-group">
+          <label for="collabEmail">Email</label>
+          <input type="email" id="collabEmail" required>
+        </div>
+        <div class="form-group">
+          <label for="collabWhatsapp">WhatsApp (ex: +33612345678)</label>
+          <input type="text" id="collabWhatsapp">
+        </div>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="collabActif" checked>
+            Actif
+          </label>
+        </div>
+        <button type="submit" class="btn btn-primary">Ajouter</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
